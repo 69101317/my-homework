@@ -24,7 +24,8 @@ jobs:
       - name: Install & Build
         run: |
           npm install
-          npm run docs:build
+          chmod +x ./node_modules/.bin/vitepress
+          npx vitepress build docs
       # 4.自动部署到pages分支
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
