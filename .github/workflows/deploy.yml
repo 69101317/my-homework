@@ -1,0 +1,33 @@
+name: Deploy VitePress Pages
+
+# 触发条件：push提交到main分支时自动运行
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1.拉取仓库代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # 2.安装node环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      # 3.安装依赖、打包博客静态文件
+      - name: Install & Build
+        run: |
+          npm install
+          npm run docs:build
+      # 4.自动部署到pages分支
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs/.vitepress/dist
